@@ -12,6 +12,10 @@ def read_data(path="") -> Tuple[pd.Series, pd.Series]:
     Read CSV and return X and y.
     """
     df = pd.read_csv(path)
+
+    # drop unnamed column that appeared
+    df = df[df.columns[:-1]]
+
     describe_df(df)
 
     feature_cols = set(df.columns) - set(NON_FEATURE_COLS)
