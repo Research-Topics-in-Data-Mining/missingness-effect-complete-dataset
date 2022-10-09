@@ -3,9 +3,25 @@
 #wget.download('https://raw.githubusercontent.com/BorisMuzellec/MissingDataOT/master/utils.py')
 
 import numpy as np
+import pandas as pd
 from .md_utils import *
 import torch
 
+def get_missing_df(X, p_miss, mecha):
+    X_values = produce_NA(X.to_numpy(), p_miss=p_miss, mecha=mecha)["X_incomp"]
+    return pd.DataFrame(X_values.tolist(), columns=X.columns)
+
+def apply_metrics(complete_df, missing_df):
+    metrics = pd.DataFrame(columns = complete_df.columns)
+    metrics = metrics.append(complete_df.mean(), ignore_index=True)
+    metrics = metrics.append(missing_df.mean(), ignore_index=True)
+
+    bias = abs(missing_df.mean()-complete_df.mean())
+    metrics = metrics.append(bias, ignore_index=True)
+
+    metrics.rename(index={0: "Real Mean", 1: "Predicted Mean", 2: "Bias"}, inplace=True)
+
+    return metrics
 
 # See https://rmisstastic.netlify.app/how-to/python/generate_html/how%20to%20generate%20missing%20values for reference
 # Function produce_NA for generating missing values ------------------------------------------------------
