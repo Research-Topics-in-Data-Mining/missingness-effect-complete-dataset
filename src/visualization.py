@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-matplotlib.rcParams['figure.figsize'] = (20, 10)
+matplotlib.rcParams['figure.dpi'] = 110
 matplotlib.style.use('ggplot')
+sns.set_theme()
 
 
 def plot_feature_importance(feature_scores):
@@ -19,7 +20,7 @@ def plot_feature_importance(feature_scores):
 
 def plot_correlation_matrix(df):
     corr_df = df.corr()
-    sns.heatmap(corr_df, annot=True)
+    sns.heatmap(corr_df, annot=True, cmap="rocket")
     plt.show()
 
 
