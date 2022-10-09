@@ -13,8 +13,7 @@ def read_data(path="") -> Tuple[pd.Series, pd.Series]:
     """
     df = pd.read_csv(path)
 
-    # drop unnamed column that appeared
-    df = df[df.columns[:-1]]
+    df = preprocess_df(df)
 
     describe_df(df)
 
@@ -32,4 +31,17 @@ def describe_df(df: pd.DataFrame):
 
 
 def preprocess_df(df: pd.DataFrame) -> pd.DataFrame:
-    pass
+    initial_n_cols = df.shape[1]
+    # drop unnamed column that appeared
+    df = df[df.columns[:-1]]
+    # drop features regarding dimensions that should not be used.
+    df = df.iloc[:, :12]
+
+    mapping = {'M': 1, 'B': 0}
+    df = df.replace({'diagnosis': mapping})
+
+    processed_n_cols = df.shape[1]
+
+    print(f"Dropping {initial_n_cols - processed_n_cols} columns...")
+
+    return df
