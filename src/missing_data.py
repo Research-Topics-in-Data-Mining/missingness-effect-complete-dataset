@@ -3,13 +3,13 @@
 #wget.download('https://raw.githubusercontent.com/BorisMuzellec/MissingDataOT/master/utils.py')
 
 import numpy as np
-from md_utils import *
+from .md_utils import *
 import torch
 
 
 # See https://rmisstastic.netlify.app/how-to/python/generate_html/how%20to%20generate%20missing%20values for reference
 # Function produce_NA for generating missing values ------------------------------------------------------
-def produce_NA(X, p_miss, mecha="MCAR", opt=None, p_obs=None, q=None):
+def produce_NA(X, p_miss, mecha="MCAR", opt=None, q=None):
     """
     Generate missing values for specifics missing-data mechanism and proportion of missing values. 
     
@@ -37,6 +37,7 @@ def produce_NA(X, p_miss, mecha="MCAR", opt=None, p_obs=None, q=None):
     'mask': a matrix indexing the generated missing values.s
     """
     
+    p_obs = 1-p_miss
     to_torch = torch.is_tensor(X) ## output a pytorch tensor, or a numpy array
     if not to_torch:
         X = X.astype(np.float32)
