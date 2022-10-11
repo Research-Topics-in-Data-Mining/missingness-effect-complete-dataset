@@ -53,13 +53,3 @@ def plot_confusion_matrix(y_true, y_pred, labels):
     with plt.style.context(style):
         sns.heatmap(confusion_matrix(y_true, y_pred, labels=labels), annot=True, fmt="d")
         plt.show()
-
-
-"""
-so the materials to be added to the doc are:
-OK - a table with the mean per feature
-OK - distribution for each feature (if you could also show the 1, 2, 3 standard deviations on the figures, it would be nice)
-OK - correlation matrix 
-- accuracies (and confusion matrices preferably) for each ML model applied
-- possible visualization of features that the ML model used the most for the decision ( I wrote some tips, what I would do)
-"""
