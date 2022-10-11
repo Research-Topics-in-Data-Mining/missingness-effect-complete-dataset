@@ -2,28 +2,64 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from src.missing_data import produce_NA
+from sklearn.metrics import confusion_matrix
+
 
 matplotlib.rcParams['figure.dpi'] = 110
-matplotlib.style.use('ggplot')
-sns.set_theme()
+# matplotlib.style.use('fivethirtyeight')
+style = "fivethirtyeight"
+plt.style.use(style)
+
+# sns.set_theme()
 
 
 def plot_feature_importance(feature_scores):
-    plt.figure(dpi=120)
-    ax = sns.barplot(x=feature_scores, y=feature_scores.index)
-    ax.set_title("Visualize feature scores of the features")
-    ax.set_yticklabels(feature_scores.index)
-    ax.set_xlabel("Feature importance score")
-    ax.set_ylabel("Features")
-    plt.show()
+    with plt.style.context(style):
+        ax = sns.barplot(x=feature_scores, y=feature_scores.index)
+        ax.set_title("Visualize feature scores of the features")
+        ax.set_yticklabels(feature_scores.index)
+        ax.set_xlabel("Feature importance score")
+        ax.set_ylabel("Features")
+        plt.show()
 
 
 def plot_correlation_matrix(df):
     corr_df = df.corr()
-    sns.heatmap(corr_df, annot=True, cmap="rocket")
-    plt.show()
+
+    with plt.style.context(style):
+        sns.heatmap(corr_df, annot=True, cmap="rocket", fmt=".1f")
+        plt.show()
 
 
 def plot_distribution(df_column):
-    sns.displot(df_column)
-    plt.show()
+    with plt.style.context(style):
+        sns.displot(df_column, kde=True)
+        plt.show()
+
+
+def plot_boxplot(df):
+    with plt.style.context(style):
+        sns.boxplot(data=df)
+        plt.show()
+
+
+def plot_missing_data(df):
+    with plt.style.context(style):
+        sns.heatmap(df.isnull(), cbar=False)
+        plt.show()
+
+def plot_confusion_matrix(y_true, y_pred, labels):
+    with plt.style.context(style):
+        sns.heatmap(confusion_matrix(y_true, y_pred, labels=labels), annot=True, fmt="d")
+        plt.show()
+
+
+"""
+so the materials to be added to the doc are:
+OK - a table with the mean per feature
+OK - distribution for each feature (if you could also show the 1, 2, 3 standard deviations on the figures, it would be nice)
+OK - correlation matrix 
+- accuracies (and confusion matrices preferably) for each ML model applied
+- possible visualization of features that the ML model used the most for the decision ( I wrote some tips, what I would do)
+"""
