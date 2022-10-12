@@ -38,6 +38,19 @@ def plot_distribution(df_column):
         plt.show()
 
 
+def plot_multiple_distribution_grid(df, columns):
+    with plt.style.context(style):
+        plt.figure(figsize=(16, 12))
+        for i, column in enumerate(columns, 1):
+            plt.subplot(3,3,i)
+            sns.histplot(df[column], kde=True)
+        plt.show()
+
+def plot_pairplot(df, columns):
+    with plt.style.context(style):
+        sns.pairplot(df, vars=columns)
+        plt.show()
+
 def plot_boxplot(df):
     with plt.style.context(style):
         sns.boxplot(data=df)

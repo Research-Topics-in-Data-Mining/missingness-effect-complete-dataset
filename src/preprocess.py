@@ -42,6 +42,10 @@ def preprocess_df(df: pd.DataFrame) -> pd.DataFrame:
 
     processed_n_cols = df.shape[1]
 
+    columns = df.columns
+    columns = [col.replace("_mean", "") for col in columns]
+    df.columns = columns
+
     print(f"Dropping {initial_n_cols - processed_n_cols} columns...")
 
     return df
