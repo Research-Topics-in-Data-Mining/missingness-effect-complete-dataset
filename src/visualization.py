@@ -42,14 +42,25 @@ def plot_multiple_distribution_grid(df, columns):
     with plt.style.context(style):
         plt.figure(figsize=(16, 12))
         for i, column in enumerate(columns, 1):
-            plt.subplot(3,3,i)
+            plt.subplot(3, 3, i)
             sns.histplot(df[column], kde=True)
         plt.show()
+
+
+def plot_multiple_boxplot_grid(df, columns):
+    with plt.style.context(style):
+        plt.figure(figsize=(16, 12))
+        for i, column in enumerate(columns, 1):
+            plt.subplot(3, 3, i)
+            sns.boxplot(df[column])
+        plt.show()
+
 
 def plot_pairplot(df, columns):
     with plt.style.context(style):
         sns.pairplot(df, vars=columns)
         plt.show()
+
 
 def plot_boxplot(df):
     with plt.style.context(style):
@@ -62,7 +73,9 @@ def plot_missing_data(df):
         sns.heatmap(df.isnull(), cbar=False)
         plt.show()
 
+
 def plot_confusion_matrix(y_true, y_pred, labels):
     with plt.style.context(style):
-        sns.heatmap(confusion_matrix(y_true, y_pred, labels=labels), annot=True, fmt="d")
+        sns.heatmap(confusion_matrix(y_true, y_pred,
+                    labels=labels), annot=True, fmt="d")
         plt.show()
