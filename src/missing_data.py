@@ -27,7 +27,6 @@ def cr(means: pd.Series, intervals: pd.Series):
         for x in range(n):
             #print(means[i], intervals[i])
             if means[i] >= intervals[i][0] and means[i] <= intervals[i][1]:
-                print("yes")
                 sum += 1
         crs.append(float(sum/n))
     print(crs)
