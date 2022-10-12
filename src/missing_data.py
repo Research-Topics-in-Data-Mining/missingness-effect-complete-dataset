@@ -3,7 +3,7 @@ import pandas as pd
 from .md_utils import *
 import torch
 from scipy.stats import t
-from typing import List
+from typing import Any, List
 
 def cl(df: pd.DataFrame) ->List:
     cls = []
@@ -15,22 +15,21 @@ def cl(df: pd.DataFrame) ->List:
         t_crit = np.abs(t.ppf((1-confidence)/2,dof))
         confidence_interval = (m-s*t_crit/np.sqrt(len(df[col])), m+s*t_crit/np.sqrt(len(df[col])))
         cls.append(confidence_interval)
-    print(cls)
+    #print(cls)
     return cls
 
 
-def cr(means: pd.Series, intervals: pd.Series):
-    crs = []
-    n = 1000
-    for i, j in intervals.items():
-        sum = 0
-        for x in range(n):
-            #print(means[i], intervals[i])
-            if means[i] >= intervals[i][0] and means[i] <= intervals[i][1]:
-                sum += 1
-        crs.append(float(sum/n))
-    print(crs)
-    return crs
+def cr(df: pd.DataFrame, means: pd.Series, missingness: str, perc: float, n: int = 1000):
+    sum = [0 for x in range(len(means))]
+    for i in range(n):
+        amputed_df = get_missing_df(df, perc, missingness)
+        amputed_cl = cl(amputed_df)
+        j = 0
+        for m in means:
+            if m >= amputed_cl[j][0] and m <= amputed_cl[j][1]:
+                sum[j] += 1
+            j += 1
+    return [x/n for x in sum]
 
 
 def get_missing_df(X, p_miss, mecha):
@@ -38,7 +37,7 @@ def get_missing_df(X, p_miss, mecha):
     return pd.DataFrame(X_values.tolist(), columns=X.columns)
 
 
-def apply_metrics(complete_df: pd.DataFrame, missing_df: pd.DataFrame) -> pd.DataFrame:
+def apply_metrics(complete_df: pd.DataFrame, missing_df: pd.DataFrame, missingness: str = "MCAR", perc: float = 0.05) -> pd.DataFrame:
     metrics = pd.DataFrame(columns = complete_df.columns)
     # mean
     metrics = metrics.append(complete_df.mean(), ignore_index=True)
@@ -49,7 +48,8 @@ def apply_metrics(complete_df: pd.DataFrame, missing_df: pd.DataFrame) -> pd.Dat
     # confidence interval
     metrics.loc[len(metrics)] = cl(missing_df)
     # coverage rate
-    metrics.loc[len(metrics)] = cr(metrics.loc[0], metrics.loc[len(metrics)-1])
+    metrics.loc[len(metrics)] = cr(complete_df, complete_df.mean(), missingness, perc)
+
     metrics.rename(index={0: "Real Mean", 1: "Predicted Mean", 2: "Bias", 3: "Confidence Interval", 4: "Coverage Rate"}, inplace=True)
 
     return metrics
