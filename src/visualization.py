@@ -1,6 +1,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+import statsmodels.api as sm
 
 from src.missing_data import produce_NA
 from sklearn.metrics import confusion_matrix
@@ -17,7 +18,7 @@ plt.style.use(style)
 def plot_feature_importance(feature_scores):
     with plt.style.context(style):
         ax = sns.barplot(x=feature_scores, y=feature_scores.index)
-        ax.set_title("Visualize feature scores of the features")
+        ax.set_title("Feature scores in RF")
         ax.set_yticklabels(feature_scores.index)
         ax.set_xlabel("Feature importance score")
         ax.set_ylabel("Features")
@@ -76,6 +77,20 @@ def plot_missing_data(df):
 
 def plot_confusion_matrix(y_true, y_pred, labels):
     with plt.style.context(style):
-        sns.heatmap(confusion_matrix(y_true, y_pred,
-                    labels=labels), annot=True, fmt="d")
+        sns.heatmap(confusion_matrix(y_true, y_pred, labels=labels), 
+                    xticklabels=[0, 1], 
+                    yticklabels=[0, 1], 
+                    annot=True, fmt="d").set(xlabel="Predicted label", 
+                                            ylabel="True label")
+        plt.show()
+
+
+def plot_qqplot(df_column):
+    with plt.style.context(style):
+        # Default is the QQ plot of the given distribution against the standard
+        # normal distribution.
+        # Drawn line is the standardized one.
+        sm.qqplot(df_column, line="s")
+        plt.title("QQ plot of " + df_column.name)
+
         plt.show()
