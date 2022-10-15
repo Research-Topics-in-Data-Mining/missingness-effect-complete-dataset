@@ -59,7 +59,7 @@ def apply_metrics(complete_df: pd.DataFrame, missing_df: pd.DataFrame, columns, 
     metrics = metrics.append(complete_df.mean(), ignore_index=True)
     metrics = metrics.append(missing_df.mean(), ignore_index=True)
     # bias
-    bias = abs(missing_df.mean()-complete_df.mean())
+    bias = missing_df.mean()-complete_df.mean()
     metrics = metrics.append(bias, ignore_index=True)
     # confidence interval
     metrics.loc[len(metrics)] = cl(missing_df)
