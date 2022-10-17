@@ -77,11 +77,11 @@ def plot_missing_data(df):
 
 def plot_confusion_matrix(y_true, y_pred, labels):
     with plt.style.context(style):
-        sns.heatmap(confusion_matrix(y_true, y_pred, labels=labels), 
-                    xticklabels=[0, 1], 
-                    yticklabels=[0, 1], 
-                    annot=True, fmt="d").set(xlabel="Predicted label", 
-                                            ylabel="True label")
+        sns.heatmap(confusion_matrix(y_true, y_pred, labels=labels),
+                    xticklabels=[0, 1],
+                    yticklabels=[0, 1],
+                    annot=True, fmt="d").set(xlabel="Predicted label",
+                                             ylabel="True label")
         plt.show()
 
 
