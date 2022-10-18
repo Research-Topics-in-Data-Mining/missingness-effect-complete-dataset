@@ -75,11 +75,19 @@ for mcar_p in percentages:
                 
                 # This is the column from the data frame where all amputation was done.
                 df_column = X_amputated.iloc[:, c1]
-                # Here I chose to drop the column with missing values from both X_train and X_test.
-                # If needed, we can change what to drop, or impute.
-                X_train, X_test, y_train, y_test = train_test_split(X_amputated.drop([c1_name], axis=1), y,
+               
+                # Create a temporary dataset that is the concatenation of X_amputated and y.
+                temp_data_set = pd.concat([X_amputated, y], axis=1)
+                # Drop the rows with missing data.
+                temp_data_set.dropna(inplace=True, axis=0)
+                # Reset indices after dropping.
+                temp_data_set.reset_index(inplace=True)
+                # Split the temporary dataset into X_dropped_miss and y_dropped_miss.
+                X_dropped_miss = temp_data_set.loc[:, "radius":"fractal_dimension"]
+                y_dropped_miss = temp_data_set.loc[:, "diagnosis"]
+                X_train, X_test, y_train, y_test = train_test_split(X_dropped_miss, y_dropped_miss,
                                                     random_state=42,
-                                                    stratify=y,
+                                                    stratify=y_dropped_miss,
                                                     train_size=0.7,
                                                     test_size=0.3)
                 rf = train(X_train, y_train)
