@@ -1,0 +1,6 @@
+for MCAR: 10, MAR: 20, MNAR: 30, the coverge rate is 0.0
+for MCAR: 5, MAR: 5, MNAR: 5, the coverge rate is 0.569
+for MCAR: 5, MAR: 10, MNAR: 15, the coverge rate is 0.0
+for MCAR: 20, MAR: 0, MNAR: 0, the coverge rate is 1.0 
+for MCAR: 0, MAR: 20, MNAR: 0, the coverge rate is 0.095
+for MCAR: 0, MAR: 0, MNAR: 20, the coverge rate is 0.0
