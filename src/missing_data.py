@@ -16,7 +16,7 @@ def confidence_interval(df_column: pd.Series) -> tuple:
     confidence = 0.95
     t_crit = np.abs(t.ppf((1 - confidence) / 2, dof))
     confidence_interval = (m - t_crit * s / np.sqrt(n),
-                           m + s * t_crit / np.sqrt(n))
+                           m + t_crit * s / np.sqrt(n))
     return confidence_interval
 
 
