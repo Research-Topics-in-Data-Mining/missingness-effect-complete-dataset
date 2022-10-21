@@ -36,7 +36,7 @@ def coverage_rate(df_column: pd.Series, x_bar_true: float) -> float:
 # Computes the metrics we use per repetition in Monte Carlo.
 # The metrics are: mean, bias, confidence interval, missingness percentage,
 # standard deviation and accuracy (received as parameter).
-def append_metrics_per_repetition(metrics_df: pd.DataFrame, df_column: pd.Series, acc: float, x_bar_true: float) -> pd.DataFrame:
+def append_metrics_per_repetition(metrics_df: pd.DataFrame, df_column: pd.Series, acc_a: float, acc_b: float, x_bar_true: float) -> pd.DataFrame:
     x_bar = df_column.mean()
     bias = x_bar - x_bar_true
     conf_int = confidence_interval(df_column)
@@ -44,7 +44,8 @@ def append_metrics_per_repetition(metrics_df: pd.DataFrame, df_column: pd.Series
     std = df_column.std()
 
     series = pd.Series({"mean": x_bar, "bias": bias, "CI": conf_int,
-                       "miss_percent": miss_percent, "std": std, "accuracy": acc})
+                       "miss_percent": miss_percent, "std": std, 
+                       "accuracy_a": acc_a, "accuracy_b": acc_b})
     return pd.concat([metrics_df, series.to_frame().T], ignore_index=True)
 
 
