@@ -1,20 +1,24 @@
+from unittest import skip
 import numpy as np
 import pandas as pd
 from .md_utils import *
 from scipy.stats import t
-
+import scipy.stats as st
+import statistics
+import statsmodels.stats.api as sms
 
 # All these functions take a data frame column.
 # Metrics are applied on a data frame column.
 
 
 def confidence_interval(df_column: pd.Series) -> tuple:
-    n = df_column.size
+    # The total number of values in the column does not consider NaNs.
+    n = df_column.size - df_column.isna().sum()
     m = df_column.mean()
     s = df_column.std()
     dof = n - 1
     confidence = 0.95
-    t_crit = np.abs(t.ppf((1 - confidence) / 2, dof))
+    t_crit = np.abs(t.ppf((1.0 - confidence) / 2.0, dof))
     confidence_interval = (m - t_crit * s / np.sqrt(n),
                            m + t_crit * s / np.sqrt(n))
     return confidence_interval
