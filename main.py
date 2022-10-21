@@ -1,6 +1,6 @@
 from sklearn import metrics
 from src.preprocess import read_data
-from src.missing_data import append_metrics_per_repetition, metric_per_missingness_config
+from src.missing_data import append_metrics_per_repetition, coverage_rate, metric_per_missingness_config
 from sklearn.model_selection import train_test_split
 from src.model import train
 import pandas as pd
@@ -66,15 +66,23 @@ c1_name = "smoothness"
 # Symmetry feature.
 c2 = 8
 c2_name = "symmetry"
-# Mean of the complete data set.
+
+# Sample mean of the smoothness column from the complete data set.
 x_bar_true = X.iloc[:, c1].mean()
+# Sample std of the smoothness column from the complete data set.
+std_true = X.iloc[:, c1].std()
 X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                     random_state=42,
                                                     stratify=y,
-                                                    train_size=0.7)
+                                                    train_size=0.7,
+                                                    test_size=0.3)
 rf = train(X_train, y_train)
 # Accuracy with RF on the complete data set.
 acc_true = rf.score(X_test, y_test)
+with open("true_metrics.txt", "w") as myfile:
+    myfile.write("true sample mean: " + str(x_bar_true) + "\n")
+    myfile.write("true sample std: " + str(std_true) + "\n")
+    myfile.write("true accuracy: " + str(acc_true) + "\n")
 
 # Monte Carlo simulation.
 percentages = [0, 10, 20]
@@ -120,11 +128,12 @@ for mcar_p in percentages:
                 metrics_df = append_metrics_per_repetition(metrics_df=metrics_df, df_column=df_column, acc_a=acc_a, acc_b=acc_b, x_bar_true=x_bar_true)
                 print(metrics_df.shape)
             
-            # metrics_df.to_csv("MCAR:" + str(mcar_p) + "_" + "MAR:" + str(mar_p) + "_" + "MNAR:" + str(mnar_p), index=False)
+            metrics_df.to_csv("./csvs/" + "MCAR:" + str(mcar_p) + "_" + "MAR:" + str(mar_p) + "_" + "MNAR:" + str(mnar_p) + ".csv", index=False)
             
             # So far we have 1000 repetitions of amputed data sets with the same configuration: a% MCAR, b% MAR, c% MNAR.
             # The column corresponds to the confidence intervals from metrics_df.
             df_column = metrics_df.iloc[:, 2]
             # This metric is computed for L repetitions of CIs.
             cr = metric_per_missingness_config(df_column=df_column, x_bar_true=x_bar_true)
-            print("coverage rate: " + str(cr))
+            with open("coverage_rates.txt", "a") as myfile:
+                myfile.write("MCAR:" + str(mcar_p) + "_" + "MAR:" + str(mar_p) + "_" + "MNAR:" + str(mnar_p) + " " + str(cr) + "\n")
