@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 
-from src.missing_data import produce_NA
 from sklearn.metrics import confusion_matrix
 
 
