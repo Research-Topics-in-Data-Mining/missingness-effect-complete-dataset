@@ -1,5 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
+
 
 def determine_tuple(tup_perm: tuple, t: int, l: int, x: int):
     tup = ()
@@ -38,11 +41,12 @@ def determine_order(t: str, l: str, x: str):
 
 
 def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, title_miss_type: str, percentage: int, column: int):
-    tup_perm = determine_order(title_miss_type, legend_miss_type, x_axis_miss_type)
-   
-    light = [] 
-    medium = [] 
-    dark = [] 
+    tup_perm = determine_order(
+        title_miss_type, legend_miss_type, x_axis_miss_type)
+
+    light = []
+    medium = []
+    dark = []
     # For data for different plots, just change the miss_p and range list.
     for t in [percentage]:
         for idx_2, l in enumerate([0, 10, 20]):
@@ -53,7 +57,7 @@ def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, ti
                 tup = determine_tuple(tup_perm, t, l, x)
                 # print(tup)
                 aux[idx_1] = dic_m[tup][column]
-            
+
             if idx_2 == 0:
                 light = aux
             elif idx_2 == 1:
@@ -88,13 +92,14 @@ def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, ti
     ax.set_ylabel(y_label)
     ax.set_xlabel(x_label)
     ax.set_xticks(ind+width)
-    ax.set_xticklabels( ('0%', '10%', '20%') )
-    ax.legend( (rects_light[0], rects_medium[0], rects_dark[0]), ('0%', '10%', '20%'), title=legend_title)
+    ax.set_xticklabels(('0%', '10%', '20%'))
+    ax.legend((rects_light[0], rects_medium[0], rects_dark[0]),
+              ('0%', '10%', '20%'), title=legend_title)
 
     def autolabel(rects):
         for rect in rects:
             h = rect.get_height()
-            ax.text(rect.get_x()+rect.get_width()/2., 1.005*h, '%.4f'%float(h),
+            ax.text(rect.get_x()+rect.get_width()/2., 1.005*h, '%.4f' % float(h),
                     ha='center', va='bottom')
 
     autolabel(rects_light)
@@ -104,3 +109,26 @@ def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, ti
     plt.ylim([0.09, 0.1])
     plt.title(plot_title)
     plt.show()
+
+
+def barplot_type3(dic_m):
+    for mcar_p in [0, 10, 20]:
+        # plt.figure(figsize=[15,14])
+        for mar_p, marker in zip([0, 10, 20], ["s", "x", "o"]):
+            for mnar_p, color in zip([0, 10, 20], ["blue", "green", "red"]):
+                if mcar_p == 0 and mar_p == 0 and mnar_p == 0:
+                    continue
+                x = dic_m[(mcar_p, mar_p, mnar_p)][4]
+                y = dic_m[(mcar_p, mar_p, mnar_p)][1]
+                label = "MAR=" + str(mar_p) + ", MNAR=" + str(mnar_p)
+                plt.scatter(x, y, marker=marker, c=color, s=60, label=label)
+
+        plt.axhline(y=0.0, color='black', linestyle='-')
+        plt.ylabel("bias")
+        plt.xlabel("accuracy_a")
+        plt.title("MCAR=" + str(mcar_p))
+        plt.legend(loc='upper left', bbox_to_anchor=(1.04, 1))
+        plt.tight_layout()
+
+        plt.show()
+        plt.clf()

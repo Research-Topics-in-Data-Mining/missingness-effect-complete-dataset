@@ -53,6 +53,6 @@ df.drop(df.columns[[0]], axis = 1, inplace=True)
 
 # print(results_mean.iloc[:, 0])
 
-barplot_type1(dic_m, dic_s, x_axis_miss_type="MNAR", legend_miss_type="MCAR", title_miss_type="MAR", percentage=20, column=0)
+# barplot_type1(dic_m, dic_s, x_axis_miss_type="MNAR", legend_miss_type="MCAR", title_miss_type="MAR", percentage=20, column=0)
 
-
+barplot_type3(dic_m)
