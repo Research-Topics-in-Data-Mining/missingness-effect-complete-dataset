@@ -111,7 +111,7 @@ def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, ti
     plt.show()
 
 
-def barplot_type3(dic_m):
+def barplot_type3(dic_m, true_acc):
     for mcar_p in [0, 10, 20]:
         # plt.figure(figsize=[15,14])
         for mar_p, marker in zip([0, 10, 20], ["s", "x", "o"]):
@@ -122,7 +122,9 @@ def barplot_type3(dic_m):
                 y = dic_m[(mcar_p, mar_p, mnar_p)][1]
                 label = "MAR=" + str(mar_p) + ", MNAR=" + str(mnar_p)
                 plt.scatter(x, y, marker=marker, c=color, s=60, label=label)
-
+        x = [true_acc]
+        y = [0.0]
+        plt.scatter(x, y, marker="*", c="black", s=100, label="no missingness")
         plt.axhline(y=0.0, color='black', linestyle='-')
         plt.ylabel("bias")
         plt.xlabel("accuracy_a")

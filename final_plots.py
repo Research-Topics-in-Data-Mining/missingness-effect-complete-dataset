@@ -45,9 +45,13 @@ for i_mcar in [0, 10, 20]:
 # print(dic_m)
 
 txt_name = "./coverage_rates.txt"
-df = pd.read_csv(txt_name, delim_whitespace=True)
-df.drop(df.columns[[0]], axis = 1, inplace=True)
+coverage_rates = pd.read_csv(txt_name, delim_whitespace=True)
+coverage_rates.drop(coverage_rates.columns[[0]], axis = 1, inplace=True)
 # print(df)
+
+true_mean = 0.0963602811950791
+true_std = 0.01406412813767362
+true_acc = 0.935672514619883
 
 # Final plots
 
@@ -55,4 +59,4 @@ df.drop(df.columns[[0]], axis = 1, inplace=True)
 
 # barplot_type1(dic_m, dic_s, x_axis_miss_type="MNAR", legend_miss_type="MCAR", title_miss_type="MAR", percentage=20, column=0)
 
-barplot_type3(dic_m)
+barplot_type3(dic_m, true_acc)
