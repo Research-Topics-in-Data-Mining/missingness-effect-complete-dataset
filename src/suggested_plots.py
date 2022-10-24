@@ -41,40 +41,49 @@ def determine_order(t: str, l: str, x: str):
 
 
 def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, title_miss_type: str, percentage: int, column: int):
-    tup_perm = determine_order(
-        title_miss_type, legend_miss_type, x_axis_miss_type)
+    if column == 0:
+        barplot_type1_mean(dic_m, dic_s, x_axis_miss_type, legend_miss_type, title_miss_type, percentage)
+    elif column == 1:
+        barplot_type1_bias(dic_m, dic_s, x_axis_miss_type, legend_miss_type, title_miss_type, percentage)
 
-    light = []
-    medium = []
-    dark = []
-    # For data for different plots, just change the miss_p and range list.
+
+def barplot_type1_mean(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, title_miss_type: str, percentage: int):
+    tup_perm = determine_order(
+    title_miss_type, legend_miss_type, x_axis_miss_type)
+
+    light_m = []
+    medium_m = []
+    dark_m = []
+    light_s = []
+    medium_s = []
+    dark_s = []
     for t in [percentage]:
         for idx_2, l in enumerate([0, 10, 20]):
-            aux = [0] * 3
+            aux_m = [0] * 3
+            aux_s = [0] * 3
             for idx_1, x in enumerate([0, 10, 20]):
                 if t == 0 and l == 0 and x == 0:
                     continue
                 tup = determine_tuple(tup_perm, t, l, x)
-                # print(tup)
-                aux[idx_1] = dic_m[tup][column]
+                aux_m[idx_1] = dic_m[tup][0]
+                aux_s[idx_1] = dic_s[tup][0]
 
             if idx_2 == 0:
-                light = aux
+                light_m = aux_m
+                light_s = aux_s
             elif idx_2 == 1:
-                medium = aux
+                medium_m = aux_m
+                medium_s = aux_s
             else:
-                dark = aux
-
-    # print("l: ", np.around(light, decimals=6))
-    # print("m: ", np.around(medium, decimals=6))
-    # print("d: ", np.around(dark, decimals=6))
+                dark_m = aux_m
+                dark_s = aux_s
 
     # x axis label
     x_label = x_axis_miss_type
     # y axis label
     y_label = "mean"
     # plot title
-    plot_title = title_miss_type + " " + str(percentage)
+    plot_title = title_miss_type + " " + str(percentage) + "%"
     # legend title
     legend_title = legend_miss_type
 
@@ -84,36 +93,115 @@ def barplot_type1(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, ti
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
+    # ax.yaxis.grid(linewidth=0.5)
 
-    rects_light = ax.bar(ind, light, width, color='skyblue')
-    rects_medium = ax.bar(ind+width, medium, width, color='dodgerblue')
-    rects_dark = ax.bar(ind+width*2, dark, width, color='navy')
+    rects_light_m = ax.bar(x=ind, height=light_m, width=width, color='skyblue', yerr=light_s, capsize = 10)
+    rects_medium_m = ax.bar(x=ind+width, height=medium_m, width=width, color='dodgerblue', yerr=medium_s, capsize = 10)
+    rects_dark_m = ax.bar(x=ind+width*2, height=dark_m, width=width, color='navy', yerr=dark_s, capsize = 10)
 
     ax.set_ylabel(y_label)
     ax.set_xlabel(x_label)
     ax.set_xticks(ind+width)
     ax.set_xticklabels(('0%', '10%', '20%'))
-    ax.legend((rects_light[0], rects_medium[0], rects_dark[0]),
+    ax.legend((rects_light_m[0], rects_medium_m[0], rects_dark_m[0]),
               ('0%', '10%', '20%'), title=legend_title)
 
     def autolabel(rects):
         for rect in rects:
             h = rect.get_height()
-            ax.text(rect.get_x()+rect.get_width()/2., 1.005*h, '%.4f' % float(h),
+            ax.text(rect.get_x()+rect.get_width()/2., 1.007*h, '%.4f' % float(h),
                     ha='center', va='bottom')
 
-    autolabel(rects_light)
-    autolabel(rects_medium)
-    autolabel(rects_dark)
+    autolabel(rects_light_m)
+    autolabel(rects_medium_m)
+    autolabel(rects_dark_m)
 
+    plt.axhline(y=0.0963602811950791, color='grey', linestyle=':')
+    plt.text(2, 0.0965, "true mean")
+    
     plt.ylim([0.09, 0.1])
+    plt.title(plot_title)
+    plt.show()
+
+
+def barplot_type1_bias(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: str, title_miss_type: str, percentage: int):
+    tup_perm = determine_order(
+    title_miss_type, legend_miss_type, x_axis_miss_type)
+
+    light_m = []
+    medium_m = []
+    dark_m = []
+    light_s = []
+    medium_s = []
+    dark_s = []
+    for t in [percentage]:
+        for idx_2, l in enumerate([0, 10, 20]):
+            aux_m = [0] * 3
+            aux_s = [0] * 3
+            for idx_1, x in enumerate([0, 10, 20]):
+                if t == 0 and l == 0 and x == 0:
+                    continue
+                tup = determine_tuple(tup_perm, t, l, x)
+                aux_m[idx_1] = dic_m[tup][1]
+                aux_s[idx_1] = dic_s[tup][1]
+
+            if idx_2 == 0:
+                light_m = aux_m
+                light_s = aux_s
+            elif idx_2 == 1:
+                medium_m = aux_m
+                medium_s = aux_s
+            else:
+                dark_m = aux_m
+                dark_s = aux_s
+
+    # x axis label
+    x_label = x_axis_miss_type
+    # y axis label
+    y_label = "mean"
+    # plot title
+    plot_title = title_miss_type + " " + str(percentage) + "%"
+    # legend title
+    legend_title = legend_miss_type
+
+    N = 3
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.27       # the width of the bars
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    # ax.yaxis.grid(linewidth=0.5)
+
+    rects_light_m = ax.bar(x=ind, height=light_m, width=width, color='skyblue', yerr=light_s, capsize = 10)
+    rects_medium_m = ax.bar(x=ind+width, height=medium_m, width=width, color='dodgerblue', yerr=medium_s, capsize = 10)
+    rects_dark_m = ax.bar(x=ind+width*2, height=dark_m, width=width, color='navy', yerr=dark_s, capsize = 10)
+
+    ax.set_ylabel(y_label)
+    ax.set_xlabel(x_label)
+    ax.set_xticks(ind+width)
+    ax.set_xticklabels(('0%', '10%', '20%'))
+    ax.legend((rects_light_m[0], rects_medium_m[0], rects_dark_m[0]),
+              ('0%', '10%', '20%'), title=legend_title)
+
+    def autolabel(rects):
+        for rect in rects:
+            h = rect.get_height()
+            ax.text(rect.get_x()+rect.get_width()/2., 1.03*h, '%.4f' % float(h),
+                    ha='center', va='top')
+
+    autolabel(rects_light_m)
+    autolabel(rects_medium_m)
+    autolabel(rects_dark_m)
+
+    plt.axhline(y=0.0, color='grey', linestyle=':')
+    
+    plt.ylim([-0.01, 0.0])
     plt.title(plot_title)
     plt.show()
 
 
 def barplot_type3(dic_m, true_acc):
     for mcar_p in [0, 10, 20]:
-        # plt.figure(figsize=[15,14])
         for mar_p, marker in zip([0, 10, 20], ["s", "x", "o"]):
             for mnar_p, color in zip([0, 10, 20], ["blue", "green", "red"]):
                 if mcar_p == 0 and mar_p == 0 and mnar_p == 0:

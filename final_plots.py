@@ -27,7 +27,7 @@ for i_mcar in [0, 10, 20]:
                 if i == 2:
                     continue
                 m[idx] = df.iloc[:, i].mean()
-                s[idx] = df.iloc[:, i].std()
+                s[idx] = df.iloc[:, i].std() / np.sqrt(1000)
                 idx += 1
             # print(m)
             # print(s)
@@ -42,7 +42,7 @@ for i_mcar in [0, 10, 20]:
             dic_s[tup] = s
 
 # print(results_mean)
-# print(dic_m)
+# print(dic_s)
 
 txt_name = "./coverage_rates.txt"
 coverage_rates = pd.read_csv(txt_name, delim_whitespace=True)
@@ -57,6 +57,6 @@ true_acc = 0.935672514619883
 
 # print(results_mean.iloc[:, 0])
 
-# barplot_type1(dic_m, dic_s, x_axis_miss_type="MNAR", legend_miss_type="MCAR", title_miss_type="MAR", percentage=20, column=0)
+barplot_type1(dic_m, dic_s, x_axis_miss_type="MCAR", legend_miss_type="MAR", title_miss_type="MNAR", percentage=20, column=1)
 
-barplot_type3(dic_m, true_acc)
+# barplot_type3(dic_m, true_acc)
