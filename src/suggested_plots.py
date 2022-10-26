@@ -427,7 +427,7 @@ def barplot_type1_acc_b(dic_m, dic_s, x_axis_miss_type: str, legend_miss_type: s
     def autolabel(rects):
         for rect in rects:
             h = rect.get_height()
-            ax.text(rect.get_x()+rect.get_width()/2., 1.007*h, '%.4f' % float(h),
+            ax.text(rect.get_x()+rect.get_width()/2., 1.017*h, '%.4f' % float(h),
                     ha='center', va='bottom')
 
     autolabel(rects_light_m)
@@ -449,7 +449,7 @@ def barplot_type3(dic_m, true_acc):
             for mnar_p, color in zip([0, 10, 20], ["blue", "green", "red"]):
                 if mcar_p == 0 and mar_p == 0 and mnar_p == 0:
                     continue
-                x = dic_m[(mcar_p, mar_p, mnar_p)][4]
+                x = dic_m[(mcar_p, mar_p, mnar_p)][5]
                 y = dic_m[(mcar_p, mar_p, mnar_p)][1]
                 label = "MAR=" + str(mar_p) + ", MNAR=" + str(mnar_p)
                 plt.scatter(x, y, marker=marker, c=color, s=60, label=label)
@@ -458,7 +458,7 @@ def barplot_type3(dic_m, true_acc):
         plt.scatter(x, y, marker="*", c="black", s=100, label="no missingness")
         plt.axhline(y=0.0, color='black', linestyle='-')
         plt.ylabel("bias")
-        plt.xlabel("accuracy_a")
+        plt.xlabel("accuracy_b")
         plt.title("MCAR=" + str(mcar_p))
         plt.legend(loc='upper left', bbox_to_anchor=(1.04, 1))
         plt.tight_layout()

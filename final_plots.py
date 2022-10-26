@@ -55,8 +55,8 @@ true_acc = 0.935672514619883
 
 # Final plots
 
-# print(results_mean.iloc[:, 0])
+# print(results_mean.iloc[:, 5])
 
-barplot_type1(dic_m, dic_s, x_axis_miss_type="MAR", legend_miss_type="MCAR", title_miss_type="MNAR", percentage=20, column=0)
+# barplot_type1(dic_m, dic_s, x_axis_miss_type="MNAR", legend_miss_type="MAR", title_miss_type="MCAR", percentage=20, column=3)
 
-# barplot_type3(dic_m, true_acc)
+barplot_type3(dic_m, true_acc)
