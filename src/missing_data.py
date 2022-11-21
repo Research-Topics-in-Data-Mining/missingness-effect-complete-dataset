@@ -36,16 +36,32 @@ def coverage_rate(df_column: pd.Series, x_bar_true: float) -> float:
 # Computes the metrics we use per repetition in Monte Carlo.
 # The metrics are: mean, bias, confidence interval, missingness percentage,
 # standard deviation and accuracy (received as parameter).
-def append_metrics_per_repetition(metrics_df: pd.DataFrame, df_column: pd.Series, acc_a: float, acc_b: float, x_bar_true: float) -> pd.DataFrame:
+def append_metrics_per_repetition(metrics_df: pd.DataFrame, df_column: pd.Series, acc_a: float, acc_b: float, x_bar_true: float, x_median_true: float, x_iqr_true: float, x_std_true: float) -> pd.DataFrame:
     x_bar = df_column.mean()
-    bias = x_bar - x_bar_true
-    conf_int = confidence_interval(df_column)
-    miss_percent = df_column.isna().sum() / df_column.size
+    x_median = df_column.median()
+    q1 = df_column.quantile(0.25)
+    q3 = df_column.quantile(0.75)
+    iqr = q3 - q1
     std = df_column.std()
 
+    bias = x_bar - x_bar_true
+    bias_median = x_median - x_median_true
+    bias_iqr = iqr - x_iqr_true
+    bias_std = std - x_std_true
+
+    bias_perc = np.abs(bias) / x_bar_true
+    bias_median_perc = np.abs(bias_median) / x_median_true    
+    bias_iqr_perc = np.abs(bias_iqr) / x_iqr_true
+
+    conf_int = confidence_interval(df_column)
+    miss_percent = df_column.isna().sum() / df_column.size
+    
     series = pd.Series({"mean": x_bar, "bias": bias, "CI": conf_int,
                        "miss_percent": miss_percent, "std": std, 
-                       "accuracy_a": acc_a, "accuracy_b": acc_b})
+                       "accuracy_a": acc_a, "accuracy_b": acc_b, 
+                       "bias_perc": bias_perc, 
+                       "median": x_median, "bias_median": bias_median, "bias_median_perc": bias_median_perc, 
+                       "iqr": iqr, "bias_iqr": bias_iqr, "bias_iqr_perc": bias_iqr_perc, "bias_std": bias_std})
     return pd.concat([metrics_df, series.to_frame().T], ignore_index=True)
 
 

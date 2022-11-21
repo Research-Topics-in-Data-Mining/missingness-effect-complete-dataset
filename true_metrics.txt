@@ -1,3 +1,6 @@
 true sample mean: 0.0963602811950791
 true sample std: 0.01406412813767362
 true accuracy: 0.935672514619883
+true sample median: 0.09587
+true sample iqr: 0.018930000000000002
+true skew: 0.10458121334214453
